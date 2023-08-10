@@ -16,13 +16,8 @@ sentry_sdk.init(
 )
 
 
-@bottle.post("/get_high_returns")
+@bottle.get("/get_high_returns")
 def get_high_returns():
-    dex = request.json["dex"]
-    lag_return = int(request.json["lag_return"])
-    daily_volume = int(request.json["daily_volume"])
-    market_cap = int(request.json.get("market_cap", 100))
-    vol_30 = int(request.json.get("vol_30", 100))
     with cache_db.connect():
         df = momentum_scanner_intraday.get_new_listing()
     df.dropna(how="all", axis=1, inplace=True)
@@ -35,7 +30,7 @@ def main():
     cache_db.init()
     gecko.init()
     threading.Thread(target=cache_db.warm_cache_loop).start()
-    bottle.run(host="localhost", port=8080)
+    bottle.run(host="localhost", port=8765)
 
 
 if __name__ == "__main__":
