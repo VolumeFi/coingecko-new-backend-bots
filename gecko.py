@@ -113,6 +113,7 @@ def new_listing():
     for i in result:
         df.loc[i["id"], "price"] = 1
         df.loc[i["id"], "activated_at"] = i["activated_at"]
+        df.loc[i["id"], "dex"] = "uniswap_v2"
     return df
 
 
