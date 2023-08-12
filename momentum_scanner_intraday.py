@@ -174,8 +174,14 @@ def get_top_gainers(
     add_technical_indicators(df)
     return df
 
-def get_new_listing():
+def get_new_listing(dex):
     df = gecko.new_listing()
+    df["dex"] = None
+    for i in df.index:
+        if gecko.filter_tickers(i, dex):
+            df.loc[i, "dex"] = dex
+    df = df[df["dex"] == dex]
+    
     df = add_volume_marketcap(df)
 
     return df
