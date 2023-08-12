@@ -97,6 +97,18 @@ def filter_tickers(ticker, dex):
 
     return in_dex
 
+def filter_tickers_address(ticker, dex):
+    result = get("coins", ticker, "tickers", params={"vs_currency": "usd"})
+    in_dex = False
+    address = ""
+
+    for i in result["tickers"]:
+        if dex == i["market"]["identifier"]:
+            address = i["base"]
+            return True, address
+
+    return in_dex, address
+
 
 def top_gainers():
     result = get("coins", "top_gainers_losers", params={"vs_currency": "usd"})

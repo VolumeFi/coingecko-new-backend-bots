@@ -177,10 +177,23 @@ def get_top_gainers(
 def get_new_listing(dex):
     df = gecko.new_listing()
     df["dex"] = None
+    df["platform"] = df.index
+    platform_dict = {}
     for i in df.index:
-        if gecko.filter_tickers(i, dex):
+        in_dex, address = gecko.filter_tickers_address(i, dex)
+        if in_dex:
             df.loc[i, "dex"] = dex
+            if dex in ["uniswap_v2", "uniswap_v3"]:
+                platform = {"ethereum":address}
+            elif dex in ["pancakeswap_new"]:
+                platform = {"binance-smart-chain":address}
+            else:
+                platform = {}
+            #df.loc[i, "platform"] = [platform]
+            platform_dict[i] = platform
+    
     df = df[df["dex"] == dex]
+    df["platform"] = df["platform"].apply(lambda x: platform_dict[x])
     
     df = add_volume_marketcap(df)
 
