@@ -18,7 +18,7 @@ sentry_sdk.init(
 
 @bottle.get("/get_high_returns")
 def get_high_returns():
-    dex = request.json["dex"]
+    dex = request.query["dex"]
     with cache_db.connect():
         df = momentum_scanner_intraday.get_new_listing(dex)
     df.dropna(how="all", axis=1, inplace=True)
