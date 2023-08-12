@@ -196,7 +196,7 @@ def get_new_listing(dex):
     df["platform"] = df["platform"].apply(lambda x: platform_dict[x])
     
     df = add_volume_marketcap(df)
-
+    df = df[df["30_day_mean_volume"] > 100000]
     return df
 
 
